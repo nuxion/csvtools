@@ -2,7 +2,7 @@ import csv
 from toolz.functoolz import pipe
 from functools import reduce
 from chardet.universaldetector import UniversalDetector
-from .models import Properties
+from csvtoolz.models import Properties
 
 def chardetect(lines):
     detector = UniversalDetector()
