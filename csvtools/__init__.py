@@ -1,1 +1,2 @@
-from .infer import bylines, chardetect
+#from .inspectors import separators, transform, inspect
+#from .models import Properties

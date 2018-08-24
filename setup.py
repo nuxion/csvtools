@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="csvtools",
-    version="0.02",
+    version="0.03",
     author="Xavier Petit",
     author_email="nuxion@gmail.com",
     description="Manage CSV related tasks",
@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="",
     packages=setuptools.find_packages(),
-    install_requires=['chardet'],
+    install_requires=['chardet', 'toolz'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
