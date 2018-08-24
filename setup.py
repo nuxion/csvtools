@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="csvtools",
+    name="csvtoolz",
     version="0.03",
     author="Xavier Petit",
     author_email="nuxion@gmail.com",

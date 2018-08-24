@@ -1,6 +1,6 @@
 from nose.tools import assert_equals, timed
-from csvtools import inspect, transform, separators
-from csvtools import models
+from csvtoolz import inspect, transform, separators
+from csvtoolz import models
 
 
 filetest = "./files/ARG-22-MPF-tabla1-06-2018_2018_08_15__15_40_01.csv"
