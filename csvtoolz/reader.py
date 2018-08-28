@@ -4,6 +4,12 @@ from csvtoolz.models import Properties
 
 
 class CSVFile():
+    """
+    Objeto que se encarga de manejar el csv.
+    Tener en cuenta que hace chain de elementos pero siempre va a modificar
+    al objeto inicial ya que devuelve la referencia a si mismo y no una copia
+    del objeto.
+    """
 
     def __init__(self, path, encoding="utf-8",delimiter=";", quotechar='"'):
         self.path = path
@@ -13,9 +19,16 @@ class CSVFile():
 
 
     def set_headers(self):
-        self._headers = self.gfile.__next__()
+        g = self.open_csv()
+        self._headers = g.__next__()
+        g.close()
+        return self
 
     def set_generator(self, headers=True):
+        """
+        Inicia y crea el generator para el archivo csv.
+
+        """
         self.gfile = self.open_csv()
         if not headers:
             self.gfile.__next__()
