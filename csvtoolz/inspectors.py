@@ -53,6 +53,11 @@ def transform(r):
     return props
 
 def inspect(arch):
+    """
+    Revisa un archivo csv y devuelve un namedtupple con
+    el encoding, el delimitador y el quotechar.
+
+    """
 
     with open(arch, "rb") as f:
         result = pipe(f, chardetect, separators, transform)
