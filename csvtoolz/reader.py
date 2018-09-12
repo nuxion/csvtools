@@ -1,4 +1,5 @@
 import csv
+import os
 from csvtoolz.inspectors import inspect
 from csvtoolz.models import Properties
 
@@ -36,8 +37,32 @@ class CSVFile():
         return self
 
     def inspect(self):
+        """
+        Deberia deprecar en futuras versiones
+        """
         self.props = inspect(self.path)
         return self
+
+    def set_props(self, encode='utf-8', delimiter=';',
+                  quotechar='"', auto_inspect=False):
+        """
+        Establece las propiedades del csv, que tiene que ver con los
+        delimitadores, quotechar y encode.
+
+        Si se sete auto_inspect = True, revisara el archivo para
+        tomar dichos valores.
+        """
+
+        if auto_inspect:
+            self.props = inspect(self.path)
+            return self
+
+        self.props.encoding=encode
+        self.props.delimiter=delimiter
+        self.props.quotechar=quotechar
+
+        return self
+
 
     def open_csv(self):
         with open(self.path, 'r', encoding=self.props.encoding) as f:
@@ -57,8 +82,7 @@ class CSVFile():
         return self.gfile
 
     def read(self):
-        self.gfile = self.setcsv()
-        return self
+        pass
 
     def make_chunks(self, lines=10):
         """
@@ -82,21 +106,41 @@ class CSVFile():
         except StopIteration:
             yield chunk
 
-    def wrapper(self, lines=10):
+    def export(self,
+                encode='utf-8',
+                delimiter=";",
+                quotechar='"',
+                with_bom = False):
+        """
+        Metodo para cambiar el encode line por line y agregar BOM
+        al principio del archivo.
+        """
+        bom = '\uFEFF'
+        export_fs =  name_file(self.path)
 
-        count = 0
-        chunk = []
-        while True:
-            yield from self.gfile
-            count +=1
-            if count >= lines:
-                yield chunk
+        with open(export_fs, 'a', encoding=encode)  as tmp_file:
+            if with_bom:
+                tmp_file.write(bom)
+            writer = csv.writer(tmp_file,
+                                delimiter=delimiter,
+                                quotechar=quotechar)
+            for line in self.inspect().open_csv():
+                writer.writerow(line)
 
+        return export_fs
 
+def name_file(fullpath):
+    abspath = os.path.abspath(fullpath)
+    splited = os.path.split(abspath)
+
+    exported = "exported_{}".format(splited[1])
+    return os.path.join(splited[0], exported)
 
 
 if __name__=='__main__':
     import sys
+
+    import pdb; pdb.set_trace()
 
     if len(sys.argv) >= 2:
         f = CSVFile(sys.argv[1])
@@ -107,11 +151,14 @@ if __name__=='__main__':
         #for c in f.inspect().set_generator().make_chunks():
         #    import pdb; pdb.set_trace()
         #    result.append(c)
+        test = name_file(sys.argv[1])
 
         for c in f.inspect().set_generator(True).make_chunks():
             print("====== CHUNK ====")
             print("Longitud del chunk: {}".format(len(c)))
             print(c)
+
+
 
 
 
