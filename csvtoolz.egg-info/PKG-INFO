@@ -1,12 +1,20 @@
 Metadata-Version: 2.1
 Name: csvtoolz
-Version: 0.0.4
+Version: 0.0.5
 Summary: Manage CSV related tasks
 Home-page: UNKNOWN
 Author: Xavier Petit
 Author-email: nuxion@gmail.com
 License: UNKNOWN
-Description: UNKNOWN
+Description: # GENERAL
+        
+        ## dist file
+        
+        ```
+            python setup.py sdist
+        ```
+        check: https://www.digitalocean.com/community/tutorials/how-to-package-and-distribute-python-applications
+        
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
