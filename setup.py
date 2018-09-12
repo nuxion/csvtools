@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="csvtoolz",
-    version="0.0.5",
+    version="0.0.6",
     author="Xavier Petit",
     author_email="nuxion@gmail.com",
     description="Manage CSV related tasks",
@@ -17,7 +17,14 @@ setuptools.setup(
                       'toolz>=0.9.0',
                       'Jinja2>=2.10',
                       'nose>=1.3.7',
+                      'click>=6.7',
                      'SQLAlchemy>=1.2.11'],
+    entry_points={
+        'console_scripts':[
+            'csvtool=csvtoolz.csvcli:cli'
+        ]
+    },
+
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

@@ -2,6 +2,7 @@ README.md
 setup.py
 csvtoolz/__init__.py
 csvtoolz/cache.py
+csvtoolz/csvcli.py
 csvtoolz/inspectors.py
 csvtoolz/models.py
 csvtoolz/reader.py
@@ -9,5 +10,6 @@ csvtoolz/utils.py
 csvtoolz.egg-info/PKG-INFO
 csvtoolz.egg-info/SOURCES.txt
 csvtoolz.egg-info/dependency_links.txt
+csvtoolz.egg-info/entry_points.txt
 csvtoolz.egg-info/requires.txt
 csvtoolz.egg-info/top_level.txt

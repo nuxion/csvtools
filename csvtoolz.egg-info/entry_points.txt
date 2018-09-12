@@ -1,0 +1,3 @@
+[console_scripts]
+csvtool = csvtoolz.csvcli:cli
+
