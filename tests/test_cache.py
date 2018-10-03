@@ -115,7 +115,16 @@ class test_Cache(unittest.TestCase):
         count = self.cache.select_count("test_init")
 
         self.assertEqual(count, 2)
+    def test_select_limit_offset(self):
+        self.cache.create_table("test_offset",
+                                self.headers)
+        self.cache.create_db()
+        for x in range(4):
+            self.cache.insert_row("test_offset", self.values)
 
+        select = self.cache.select_limit_offset("test_offset", 2, 3)
+        result = self.cache.execute(select).fetchall()
+        self.assertEqual(len(result), 1)
 
     def test_insert_chunk(self):
         self.cache.create_db()

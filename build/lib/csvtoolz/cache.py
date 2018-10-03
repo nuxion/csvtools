@@ -96,7 +96,25 @@ class Cache(SQL):
     def add_table(self, name, table):
         self._tables.update({name: table})
 
+    def get_table(self, name):
+        """
+        Recibe el nombre de la tabla que debe buscar en el
+        diccionario _tables.
+
+        Devuelve la tabla segun el nombre que se le pasa.
+        En caso que la tabla no exista o no este registrada
+        devolvera None
+        """
+        try:
+            return self._tables[name]
+        except KeyError:
+            return None
+
     def insert_row(self, name, values):
+        """
+        Recibe `name` str es el tipo de tabla.
+        Y values que puede ser un vector. :
+        """
         headers = self.get_headers(name)
         # tiene que borrar el id
         headers.pop(0)
@@ -130,6 +148,16 @@ class Cache(SQL):
         #count2 = select([func.count('*')]).select_from(self._tables[name].table)
         return self.conn.scalar(count)
 
+    def get_select(self, name):
+        """
+        Retorna el objeto select y ademas la tabla para poder
+        personalizar los queries en caso que se requiera.
+        """
+        return select([self._tables[name]])
+
+    def select_limit_offset(self, name, limit, offset):
+        return select([self._tables[name]]).limit(limit).offset(offset)
+
     def insert_chunk(self, name, chunk):
         headers = self.get_headers(name, del_id=True)
 
@@ -156,24 +184,35 @@ class Cache(SQL):
         self._tables[name].drop(self.engine)
         self._tables.pop(name, None)
 
+    def execute(self, query):
+        """
+        wrap de con.execute, al objeto que devuleve se puede hacer
+        un fetchall() para ejecutar el proxy
+        """
+
+        proxy = self.conn.execute(query)
+        return proxy
 
 
 
 
 if __name__ == '__main__':
-    c = Cache('sqlite:///test2.db')
+    #c = Cache('sqlite:///test2.db')
+    c = Cache('sqlite:///test3.db')
     c.create_table("test", ['title', 'name', 'age'])
-    c.create_table("test2", ['title', 'name', 'age'])
     c.create_db()
     c.insert_row('test', ['nacion', 'alberto'])
-    chunk = [['lalal', 'lasdlad', 'alala'], ['lala12', 'iweiqe', 'aoqwe']]
-    #c.insert_chunk('test', chunk)
-    c.flush_table('test2')
+    c.insert_row('test', ['nacion2', 'alberto'])
+    c.insert_row('test', ['nacion3', 'alberto'])
+    c.insert_row('test', ['nacion4', 'alberto'])
+    count = c.select_count('test')
+    print(count)
+    table = c.select_limit_offset("test", 2, 2)
     import pdb; pdb.set_trace()
-    result = c.select_count('test')
     print("count result")
 
     r = c.select_all('test')
+
     for i in r:
         print(i)
 
