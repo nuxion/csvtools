@@ -20,17 +20,31 @@ def chardetect(lines):
 
     return res
 
-def separators(result):
+def convert_bytearray(encoding, lines):
+    #: El map convierte la linea de bytes en str text de una
+    #: sola linea.
+    text = reduce(lambda y,z: "{}{}".format(y, z) ,
+                 list(map(lambda x: x.decode(encoding), lines)))
 
-    if result['encoding']:
-        elements = reduce(lambda y,z: "{}{}".format(y, z),
-                          list(map(lambda x: x.decode(result['encoding']),
-                            result['lines'])))
-        res = csv.Sniffer().sniff(elements)
-        result.update({'sniffer': res})
+    return text
 
+def separators(text):
+    """Recibe un array con las lineas en bytes capturado
+    por chardetect.
 
-    return result
+    Los decodifica a string segun el chardetect obtenido.
+
+    """
+
+    options = ['|', ';', ',']
+    counts = 0
+    separator = None
+    for o in options:
+        c = text.count(o)
+        if c > counts:
+            counts = c
+            separator = o
+    return separator
 
 def transform(r):
     """
@@ -38,6 +52,8 @@ def transform(r):
     para responder. A la vez permite utilizar esta ultima funcion
     como interfaz para modificar el formato de la respuesta
     sin afectar el resto.
+
+
 
     """
 
@@ -60,11 +76,17 @@ def inspect(arch):
     """
 
     with open(arch, "rb") as f:
-        result = pipe(f, chardetect, separators, transform)
+        #result = pipe(f, chardetect, separators, transform)
+        coding = chardetect(f)
 
-    return result
+    text = convert_bytearray(coding['encoding'], coding['lines'])
+    field_separator = separators(text)
+    sniffer = csv.Sniffer().sniff(text)
+    props = Properties(coding['encoding'],
+                       field_separator,
+                       sniffer.quotechar)
 
-
+    return props
 
 
 if __name__=='__main__':
