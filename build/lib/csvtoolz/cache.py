@@ -148,6 +148,15 @@ class Cache(SQL):
         #count2 = select([func.count('*')]).select_from(self._tables[name].table)
         return self.conn.scalar(count)
 
+    def select_column(self, name, column):
+        """Devuelve una columna pasada como parametro.
+        Retorn un ResultProxy.
+
+        """
+        col = getattr(self._tables[name].c, column)
+        select_col = select(col)
+        return self.conn.execute(select_col)
+
     def get_select(self, name):
         """
         Retorna el objeto select y ademas la tabla para poder
