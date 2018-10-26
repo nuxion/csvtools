@@ -11,6 +11,7 @@ from sqlalchemy import (create_engine,
                         MetaData,
                         select,
                         func)
+from sqlalchemy.sql import text
 from csvtoolz.utils import TableHelper
 
 class DynamicTable():
@@ -167,6 +168,18 @@ class Cache(SQL):
     def select_limit_offset(self, name, limit, offset):
         return select([self._tables[name]]).limit(limit).offset(offset)
 
+    def find_duplicates(self, name):
+        """Busca duplicados en la tabla.
+        """
+        headers = self.get_headers(name)
+        #query = text("SELECT *, count(*) FROM :table GROUP BY :column HAVING count(*)>1")
+        query = text("SELECT *, count(*) FROM {} GROUP BY {} HAVING count(*)>1".format(name, headers[1]))
+        #query = query.bindparams(table=name, column=headers[1])
+        #import pdb; pdb.set_trace()
+        #result = self.conn.execute(query, table=name, column=headers[1])
+        result = self.conn.execute(query)
+        return result
+
     def insert_chunk(self, name, chunk):
         headers = self.get_headers(name, del_id=True)
 
@@ -211,13 +224,19 @@ if __name__ == '__main__':
     c.create_table("test", ['title', 'name', 'age'])
     c.create_db()
     c.insert_row('test', ['nacion', 'alberto'])
+    c.insert_row('test', ['nacion', 'alberto'])
+    c.insert_row('test', ['nacion', 'alberto'])
+    c.insert_row('test', ['nacion', 'alberto'])
+    c.insert_row('test', ['nacion', 'alberto'])
     c.insert_row('test', ['nacion2', 'alberto'])
     c.insert_row('test', ['nacion3', 'alberto'])
     c.insert_row('test', ['nacion4', 'alberto'])
     count = c.select_count('test')
     print(count)
-    table = c.select_limit_offset("test", 2, 2)
+    duplicates = c.find_duplicates("test")
     import pdb; pdb.set_trace()
+    table = c.select_limit_offset("test", 2, 2)
+    #import pdb; pdb.set_trace()
     print("count result")
 
     r = c.select_all('test')
