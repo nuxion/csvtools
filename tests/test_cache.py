@@ -133,6 +133,19 @@ class test_Cache(unittest.TestCase):
         count = self.cache.select_count("test_init")
         self.assertEqual(count, 4)
 
+    def test_find_duplicates(self):
+        self.cache.create_db()
+        self.cache.insert_row("test_init", self.values)
+        self.cache.insert_row("test_init", self.values)
+        self.cache.insert_row("test_init", self.values)
+        self.cache.insert_row("test_init", ["dos", "dos", 2])
+        self.cache.insert_row("test_init", ["dos", "dos", 2])
+        self.cache.insert_row("test_init", ["tres", "tres", 2])
+        query = self.cache.find_duplicates("test_init")
+        result = query.fetchall()
+        self.assertEqual(len(result), 2)
+
+
 
 
 

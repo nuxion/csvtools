@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="csvtoolz",
-    version="0.0.9",
+    version="0.0.91",
     author="Xavier Petit",
     author_email="nuxion@gmail.com",
     description="Manage CSV related tasks",
