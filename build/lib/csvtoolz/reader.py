@@ -57,7 +57,7 @@ class CSVFile():
             self.props = inspect(self.path)
             return self
 
-        self.props = Properties(encoding, delimiter, quotechar)
+        self.props = Properties(encode, delimiter, quotechar)
 
         return self
 
