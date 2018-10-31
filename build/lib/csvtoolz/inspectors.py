@@ -1,21 +1,29 @@
 import csv
+import chardet
 from toolz.functoolz import pipe
 from functools import reduce
-from chardet.universaldetector import UniversalDetector
 from csvtoolz.models import Properties
 
-def chardetect(lines):
-    detector = UniversalDetector()
+def chardetect(stream, limit=20):
+    """Recibe la referencia al archivo abierto en modo binario.
+    Lo itera hasta que se termine el archivo o llegue a limite del parametro
+    `limit`. Lo analiza y devuelve el resultado.
+
+    :params: stream
+    :params: limit
+    :returns: chardet
+    """
+
     buffer_lines = []
-    for line in lines:
+    stream_buffer = bytearray()
+    for line in stream:
         buffer_lines.append(line)
         line=bytearray(line)
-        detector.feed(line)
-        if detector.done:
-            print(line)
+        stream_buffer += line
+        if len(buffer_lines) > limit:
             break
-    detector.close()
-    res = detector.result
+
+    res = chardet.detect(stream_buffer)
     res.update({'lines': buffer_lines })
 
     return res
