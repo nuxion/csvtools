@@ -6,6 +6,7 @@ from csvtoolz import models, CSVFile
 
 
 filetest = "./files/ARG-22-MPF-tabla1-06-2018_2018_08_15__15_40_01.csv"
+longchar = "./files/ARG-00-CDM-h-tabla6_2-12-2017_2018_11_05__17_40_03.csv"
 
 @timed(1.1)
 def test_chardetect():
@@ -43,6 +44,18 @@ class test_CSVFile(unittest.TestCase):
         for l in self.file_obj.inspect().open_csv():
             count += 1
         self.assertEqual(count,3)
+
+    def test_longchar(self):
+        """Test_longchar
+        Si hay caracteres especiales mas adentrado
+        el archivo no lo va a detectar.
+        Se expandio la cantidad de lineas del buffer.
+        """
+        count = 0
+        file_obj = CSVFile(longchar)
+        for l in file_obj.inspect().open_csv():
+            count += 1
+        self.assertEqual(count,1741)
 
     def test_chunks(self):
         result = []

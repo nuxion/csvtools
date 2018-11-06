@@ -4,7 +4,7 @@ from toolz.functoolz import pipe
 from functools import reduce
 from csvtoolz.models import Properties
 
-def chardetect(stream, limit=20):
+def chardetect(stream, limit=200):
     """Recibe la referencia al archivo abierto en modo binario.
     Lo itera hasta que se termine el archivo o llegue a limite del parametro
     `limit`. Lo analiza y devuelve el resultado.
@@ -22,6 +22,7 @@ def chardetect(stream, limit=20):
         stream_buffer += line
         if len(buffer_lines) > limit:
             break
+
 
     res = chardet.detect(stream_buffer)
     res.update({'lines': buffer_lines })
